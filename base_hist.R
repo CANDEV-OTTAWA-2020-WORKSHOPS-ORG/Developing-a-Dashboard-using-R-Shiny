@@ -27,7 +27,7 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   
   output$hist = renderPlot({
-
+    
     hist(dairy_buttermilk$val,breaks=input$binwidth)
     
   })
