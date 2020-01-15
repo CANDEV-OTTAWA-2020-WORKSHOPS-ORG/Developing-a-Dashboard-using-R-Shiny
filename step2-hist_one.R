@@ -1,5 +1,5 @@
 # load librairies
-library(cansim); library(lubridate); library(tidyverse)
+library(cansim); library(tidyverse)
 
 
 # retrieve full StatCan data set by table number

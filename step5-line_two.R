@@ -34,7 +34,7 @@ server <- function(input, output, session) {
   
   
   dairy_reactive <- reactive({
-    dairy_national %>% filter(Commodity == input$commodity, GEO == input$geo)
+    dairy %>% filter(Commodity == input$commodity, GEO == input$geo)
   })  
   
   
