@@ -1,28 +1,19 @@
 # load librairies
 library(cansim); library(tidyverse)
 
-
-# retrieve full StatCan data set by table number
 dairy <- get_cansim_ndm(32100114)
 
 
-# manipulate data to have monthly data summed by year
 dairy %<>% mutate(year=str_sub(REF_DATE,1,4)) %>%
   group_by(year, Commodity, GEO) %>%
   summarise(value = sum(VALUE))
 
-
-# here we tell R to filter the dairy table to include only the commodity Buttermilk
 dairy_buttermilk <- dairy %>% filter(Commodity == 'Buttermilk')
 
 
 
-
-# load shiny app
 library(shiny)
 
-
-# create user interface
 ui <- fluidPage(
   
   sliderInput('binwidth', 'Bins', 5,50,5),
@@ -30,11 +21,13 @@ ui <- fluidPage(
 )
 
 
-#create output
 server <- function(input, output, session) {
   
   output$hist = renderPlot({
     
+    #unlike the previous app ran, this render function tells the output object (output$hist) 
+    #to rerun its code looking up the value supplied by the input object (input$binwidth) every time the app
+    #is invalidated. Instead of breaks = 10, breaks will be equal to the input object's value every time it is changed
     hist(dairy_buttermilk$value,breaks=input$binwidth,
          main = paste('Histogram of buttermilk - ',input$binwidth,'breaks'),
          xlab = '')

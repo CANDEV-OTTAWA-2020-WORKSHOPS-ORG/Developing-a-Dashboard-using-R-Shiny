@@ -10,8 +10,6 @@ dairy %<>% mutate(year=str_sub(REF_DATE,1,4)) %>%
 dairy_national <- dairy %>% filter(GEO == "Canada")
 
 
-# instead of specifying which commodity to filter for in the R script, we can
-# allow the user to choose the commodity by including it in the shiny reactive environment
 
 library(shiny)
 
@@ -20,7 +18,6 @@ library(shiny)
 ui <- fluidPage(
   
   
-  #the selectInput is the input object the user will use to select the commodity
   selectInput('commodity','Milk',choices = unique(dairy_national$Commodity), selected = 'Buttermilk'),
   
   plotOutput('line')
@@ -31,11 +28,9 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   
-  # create reactive data set based on input object (selectInput) called commodity
-  
-  
   dairy_reactive <- reactive({
     dairy_national %>% filter(Commodity == input$commodity)
+    
   })  
   
   
@@ -43,8 +38,9 @@ server <- function(input, output, session) {
   output$line = renderPlot({
     
     
-    # the background r script (the renderPlot function) now calls the reactive data
-    # note the open close bracket, which tells the function called to use reactive data
+    # the only real difference in this app is that we are passing a new R function in the 
+    # render function. Here we use plot instead of hist. You can use 100 lines of code in the render function
+    # everything inside the squiggly brackets will run as one chunk of code every time the app is invalidated
     
     plot(dairy_reactive()$year,dairy_reactive()$value,type = 'l',
          main = paste('Line chart of',input$commodity))

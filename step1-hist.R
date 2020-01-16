@@ -6,16 +6,14 @@ library(cansim); library(tidyverse)
 dairy <- get_cansim_ndm(32100114)
 
 
-# manipulate data to have monthly data summed by year
+# sum monthly data by year
 dairy %<>% mutate(year=str_sub(REF_DATE,1,4)) %>%
   group_by(year, Commodity, GEO) %>%
   summarise(value = sum(VALUE))
 
 
-# here we tell R to filter the dairy table to include only the commodity Buttermilk
+# filter the dairy table to include only the commodity Buttermilk
 dairy_buttermilk <- dairy %>% filter(Commodity == 'Buttermilk')
-
-
 
 
 # load shiny app
@@ -40,6 +38,9 @@ server <- function(input, output, session) {
   
   output$hist = renderPlot({
     
+    #the render function tells the output object (output$hist) which R code to run
+    #in this case there is nothing linked to the input object (sliderInput), it tells the app to run with breaks = 10
+    #this is not a reactive app
     hist(dairy_buttermilk$value,breaks=10,
          main = paste('Histogram of buttermilk'),
          xlab = '')
