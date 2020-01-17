@@ -7,6 +7,7 @@ dairy <- get_cansim_ndm(32100114)
 
 # read map
 prov_map = readOGR('Energy/Canada/Canada.shp',stringsAsFactors = FALSE)
+
 # transform coordinates from WGS84 to longitude-latitude
 prov_map <- spTransform(prov_map, CRS("+proj=longlat +datum=WGS84"))
 
@@ -15,7 +16,8 @@ dairy %<>% mutate(year=str_sub(REF_DATE,1,4)) %>%
   group_by(Commodity, GEO) %>%
   summarise(value = sum(VALUE,na.rm=TRUE))
 
-# join dairy set to the provincial map
+# join dairy set to the provincial map 
+# (this particular way to add data to the map is possible because of the spdplyr package)
 prov_map %<>% left_join(dairy,by=c('NAME'='GEO'))
 
 library(shiny)
@@ -57,15 +59,12 @@ server <- function(input, output, session) {
   # create and update map
   output$plot <- renderLeaflet({
     
-    # save range of values for color gradient
-    value_range = map_reactive()$value
     
   leaflet() %>%
-    # sets zoom level and center of map
+    # sets initial view of mpa (zoom level and map center)
     setView(lng = -98.4, lat = 58.2, zoom = 4) %>%
     # add basemap
-    addProviderTiles(providers$Esri.WorldImagery,
-                     options = providerTileOptions(opacity = 0.8)) %>%
+    addProviderTiles(providers$Esri.WorldImagery) %>%
     # remove legend and colors (part of the reactive)
     clearShapes() %>% clearControls() %>%
     # add colors
@@ -74,8 +73,10 @@ server <- function(input, output, session) {
       data = map_reactive(),
       # adds colors to provinces based on selected commodity
       fillColor = ~colorBin(c("#E1F5C4","#EDE574","#F9D423","#FC913A","#FF4E50"), value, 5)(value),
-      #customize map attributes
-      color = "#BDBDC3", fillOpacity = 0.7, weight = 4) %>%
+      # choose opacity of polygon fills
+      fillOpacity = 0.7,
+      #customize map edges
+      color = "#BDBDC3", weight = 4) %>%
     # add legend
     addLegend(
       # choose legend position
@@ -87,9 +88,7 @@ server <- function(input, output, session) {
         palette = c("#E1F5C4","#EDE574","#F9D423","#FC913A","#FF4E50"), 
         domain = map_reactive()$value, 5), 
       # create legend values (these correspond with the fill colors of polygons)
-      values = value_range,
-      # choose order of legend values
-      labFormat = labelFormat(transform = function(value_range) sort(value_range, decreasing = FALSE))
+      values = map_reactive()$value
         )
     
   })
@@ -97,8 +96,5 @@ server <- function(input, output, session) {
 }
 
 shinyApp(ui, server)
-
-
-
 
 
