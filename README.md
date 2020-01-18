@@ -20,4 +20,4 @@ install.packages("geosphere")
 ```
 
 
-### When you're ready to start building, check out this reference document. 
+### When you're ready to start building, check out this reference [document](https://github.com/cuddjim/candev_shiny/blob/master/Ref%20doc.docx). 
