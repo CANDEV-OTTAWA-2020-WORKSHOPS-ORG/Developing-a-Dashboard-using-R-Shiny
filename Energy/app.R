@@ -205,7 +205,7 @@ server <- shinyServer(function(input, output) {
                                      attributionControl=FALSE)) %>%
       setView(lng = -98.4, lat = 58.2, zoom = 4) %>%
       addProviderTiles(providers$Esri.WorldImagery,
-                       options = providerTileOptions(opacity = 0.8)) %>%
+                       options = providerTileOptions(opacity = 0.8)) %>% 
       clearShapes() %>%
       clearControls() %>%
       addPolygons(data = map_reactive(),
