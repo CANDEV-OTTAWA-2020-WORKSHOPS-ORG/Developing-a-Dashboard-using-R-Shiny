@@ -10,8 +10,13 @@ install.packages("shiny")
 install.packages("plotly")
 install.packages("tidyverse")
 install.packages("cansim")
-install.packages("xyz")
 install.packages("shinythemes")
+install.packages("magrittr")
+install.packages("leaflet")
+install.packages("rgdal")
+install.packages("spdplyr")
+install.packages("rgeos")
+install.packages("geosphere")
 ```
 
 
