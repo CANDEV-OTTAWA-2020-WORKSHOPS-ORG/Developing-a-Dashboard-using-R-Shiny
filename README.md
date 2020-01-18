@@ -6,18 +6,18 @@ This presentation will cover the basics of using R Shiny and will provide a reso
 ### Packages required for demo
 
 ```
-install.packages("shiny")
-install.packages("plotly")
-install.packages("tidyverse")
-install.packages("cansim")
-install.packages("lubridate")
-install.packages("shinythemes")
-install.packages("magrittr")
-install.packages("leaflet")
-install.packages("rgdal")
-install.packages("spdplyr")
-install.packages("rgeos")
-install.packages("geosphere")
+install.packages(
+  c(
+    # shiny libraries
+    "shiny","shinythemes",
+    # data manipulation libraries
+    "magrittr","tidyverse","cansim","lubridate",
+    # geographic manipulation libraries
+    "rgdal","spdplyr","rgeos","geosphere",
+    # data visualization libraries
+    "plotly","leaflet"
+    )
+  )
 ```
 
 
